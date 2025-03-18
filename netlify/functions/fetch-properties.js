@@ -1,15 +1,11 @@
 const fetch = require('node-fetch');
 
 exports.handler = async (event) => {
-  const apiUrl = 'https://crmapi.proppydev.com/api/Property/ListProperties';
+  const apiUrl = 'https://crmapi.proppydev.com/api/Property/SendProperty'; // New URL
   const token = 'Basic ZXh0ZXJuYWxkZXY6Rml0aDVmQmRmZ3NkeEhWTUF4aXpkNW9yNjhn';
 
-  const requestBody = {
-    "Featured": true,
-    "VisibleOnWebsite": true,
-    "SequenceNmbr": 1,
-    "MaxResponses": 10
-  };
+  // Minimal request body (since it's for sending, we'll test with an empty object)
+  const requestBody = {};
 
   try {
     const response = await fetch(apiUrl, {
@@ -24,6 +20,9 @@ exports.handler = async (event) => {
     if (!response.ok) {
       return {
         statusCode: response.status,
+        headers: {
+          'Access-Control-Allow-Origin': '*'
+        },
         body: JSON.stringify({ error: `API request failed with status ${response.status}` })
       };
     }
@@ -31,11 +30,17 @@ exports.handler = async (event) => {
     const data = await response.json();
     return {
       statusCode: 200,
-      body: JSON.stringify(data.PropertyList)
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      },
+      body: JSON.stringify(data.Properties || data) // Adjust for possible response structure
     };
   } catch (error) {
     return {
       statusCode: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      },
       body: JSON.stringify({ error: error.message })
     };
   }
