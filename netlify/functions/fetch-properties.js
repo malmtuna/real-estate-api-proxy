@@ -29,11 +29,17 @@ exports.handler = async (event) => {
       };
     }
 
-    console.log('API Response:', JSON.stringify(data, null, 2)); // Temporary log
+    const propertiesWithProxy = data.PropertyList.map(property => {
+      if (property.photos && property.photos.length > 0) {
+        property.proxyImageUrl = `https://testingapi123.netlify.app/.netlify/functions/image?url=${encodeURIComponent(property.photos[0].Url)}`;
+      }
+      return property;
+    });
+
     return {
       statusCode: 200,
       headers: { 'Access-Control-Allow-Origin': '*' },
-      body: JSON.stringify(data.PropertyList)
+      body: JSON.stringify(propertiesWithProxy)
     };
   } catch (error) {
     return {
