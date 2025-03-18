@@ -24,29 +24,21 @@ exports.handler = async (event) => {
     if (!response.ok) {
       return {
         statusCode: response.status,
-        headers: {
-          'Access-Control-Allow-Origin': '*',
-          'Content-Type': 'application/json'
-        },
+        headers: { 'Access-Control-Allow-Origin': '*' },
         body: JSON.stringify({ error: `API request failed with status ${response.status}` })
       };
     }
 
+    console.log('API Response:', JSON.stringify(data, null, 2)); // Temporary log
     return {
       statusCode: 200,
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
-      },
+      headers: { 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify(data.PropertyList)
     };
   } catch (error) {
     return {
-      statusCode: 502, // Match the error we’re seeing
-      headers: {
-        'Access-Control-Allow-Origin': '*',
-        'Content-Type': 'application/json'
-      },
+      statusCode: 502,
+      headers: { 'Access-Control-Allow-Origin': '*' },
       body: JSON.stringify({ error: error.message })
     };
   }
